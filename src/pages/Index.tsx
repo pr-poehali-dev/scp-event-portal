@@ -11,6 +11,7 @@ type CartItem = {
   name: string;
   price: number;
   quantity: number;
+  period?: 'week' | 'month' | 'forever' | 'once';
 };
 
 const nonRpEvents = [
@@ -49,34 +50,117 @@ const loreEvents = [
 ];
 
 const shopItems = [
-  { id: 1, name: 'VIP Статус', price: 299, icon: 'Crown', desc: 'Эксклюзивные привилегии' },
-  { id: 2, name: 'Донат Набор', price: 499, icon: 'Package', desc: 'Полный комплект бонусов' },
-  { id: 3, name: 'Премиум Скин', price: 199, icon: 'Sparkles', desc: 'Уникальный внешний вид' },
-  { id: 4, name: 'Особая Роль', price: 399, icon: 'Shield', desc: 'Доступ к спец. классам' },
+  { 
+    id: 1, 
+    name: 'Prime', 
+    prices: { week: 75, month: 200, forever: 400 },
+    icon: 'Gem', 
+    color: 'from-green-500 to-emerald-600',
+    desc: 'Плашка Prime (зелёный), выбор ивента при голосовании если умер',
+    features: ['Плашка "Prime" (Зелёный)', 'Выбор ивента на голосовании']
+  },
+  { 
+    id: 2, 
+    name: 'VIP', 
+    prices: { week: 150, month: 350, forever: 600 },
+    icon: 'Crown', 
+    color: 'from-yellow-500 to-amber-600',
+    desc: 'Плашка VIP (жёлтый), выбор ивента и роли на ивенте',
+    features: ['Плашка "VIP" (Жёлтый)', 'Выбор ивента на голосовании', 'Выбор роли на ивенте']
+  },
+  { 
+    id: 3, 
+    name: 'Премиум', 
+    prices: { week: 200, month: 400, forever: 850 },
+    icon: 'Sparkles', 
+    color: 'from-yellow-400 to-orange-500',
+    desc: 'Плашка Премиум (золотой), выбор роли, доступ в админ чат',
+    features: ['Плашка "Премиум" (Золотой)', 'Выбор ивента и роли', 'Доступ к админ чату']
+  },
+  { 
+    id: 4, 
+    name: 'Event Master', 
+    prices: { week: 300, month: 600, forever: 1500 },
+    icon: 'Wand2', 
+    color: 'from-cyan-500 to-blue-600',
+    desc: 'Донат ивент мастер, проведение ивентов, 2 голоса на выборе',
+    features: ['Плашка "Донат. мастер" (Голубой)', 'Проведение ивентов', 'Выбор любой роли', '2 голоса за ивент']
+  },
+  { 
+    id: 5, 
+    name: 'Элита', 
+    prices: { week: 450, month: 750, forever: 2000 },
+    icon: 'Shield', 
+    color: 'from-slate-700 to-slate-900',
+    desc: 'Elite статус, полный админ доступ, проведение ивентов',
+    features: ['Плашка "Elite" (Чёрный/Белый/Изумрудный)', 'Полный админ доступ', 'Проведение ивентов', 'Роль Elite в Discord', '2 голоса (можно за свой)']
+  },
+  { 
+    id: 6, 
+    name: 'Спонсор', 
+    prices: { week: 1000, month: 2000, forever: 5000 },
+    icon: 'Trophy', 
+    color: 'from-red-600 to-rose-800',
+    desc: 'Высший статус, выбор цвета роли, все привилегии',
+    features: ['Плашка "Спонсор" (Чёрный/Красный)', 'Выбор цвета игровой роли', 'Роль Спонсор в Discord', 'Все привилегии Элиты', 'Отказ от ивент прав']
+  },
+  { 
+    id: 7, 
+    name: '100 Фэиров', 
+    prices: { once: 100 },
+    icon: 'Coins', 
+    color: 'from-purple-500 to-pink-600',
+    desc: 'Внутриигровая валюта для покупки эффектов смерти и кейсов',
+    features: ['100 Фэиров = 100₽', 'Покупка эффектов смерти', 'Открытие кейсов', 'Разные плюшки']
+  },
+  { 
+    id: 8, 
+    name: '1000 Фэиров', 
+    prices: { once: 1000 },
+    icon: 'Coins', 
+    color: 'from-purple-500 to-pink-600',
+    desc: 'Большой набор внутриигровой валюты',
+    features: ['1000 Фэиров = 1000₽', 'Покупка эффектов смерти', 'Открытие кейсов', 'Разные плюшки']
+  },
+  { 
+    id: 9, 
+    name: '2000 Фэиров', 
+    prices: { once: 2000 },
+    icon: 'Coins', 
+    color: 'from-purple-500 to-pink-600',
+    desc: 'Огромный набор внутриигровой валюты',
+    features: ['2000 Фэиров = 2000₽', 'Покупка эффектов смерти', 'Открытие кейсов', 'Разные плюшки']
+  }
 ];
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState('nonrp');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedPeriods, setSelectedPeriods] = useState<Record<number, 'week' | 'month' | 'forever' | 'once'>>({});
 
-  const addToCart = (item: typeof shopItems[0]) => {
+  const addToCart = (item: typeof shopItems[0], period?: 'week' | 'month' | 'forever' | 'once') => {
+    const priceKey = period || 'once';
+    const price = 'prices' in item ? (item.prices as any)[priceKey] : 0;
+    const itemName = period ? `${item.name} (${period === 'week' ? 'Неделя' : period === 'month' ? 'Месяц' : period === 'forever' ? 'Навсегда' : ''})` : item.name;
+    
     setCart(prev => {
-      const existing = prev.find(i => i.id === item.id);
+      const uniqueId = `${item.id}-${period}`;
+      const existing = prev.find(i => i.id === item.id && i.period === period);
       if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+        return prev.map(i => (i.id === item.id && i.period === period) ? { ...i, quantity: i.quantity + 1 } : i);
       }
-      return [...prev, { id: item.id, name: item.name, price: item.price, quantity: 1 }];
+      return [...prev, { id: item.id, name: itemName, price, quantity: 1, period }];
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCart(prev => prev.filter(i => i.id !== id));
+  const removeFromCart = (id: number, period?: string) => {
+    setCart(prev => prev.filter(i => !(i.id === id && i.period === period)));
   };
 
-  const updateQuantity = (id: number, delta: number) => {
+  const updateQuantity = (id: number, period: string | undefined, delta: number) => {
     setCart(prev => prev.map(i => {
-      if (i.id === id) {
+      if (i.id === id && i.period === period) {
         const newQty = i.quantity + delta;
         return newQty > 0 ? { ...i, quantity: newQty } : i;
       }
@@ -128,21 +212,21 @@ export default function Index() {
                     </div>
                   ) : (
                     <>
-                      {cart.map(item => (
-                        <div key={item.id} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                      {cart.map((item, idx) => (
+                        <div key={`${item.id}-${item.period}-${idx}`} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
                           <div className="flex-1">
-                            <h4 className="font-semibold">{item.name}</h4>
+                            <h4 className="font-semibold text-sm">{item.name}</h4>
                             <p className="text-sm text-primary">{item.price}₽</p>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, -1)}>
+                            <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, item.period, -1)}>
                               <Icon name="Minus" size={14} />
                             </Button>
                             <span className="w-8 text-center">{item.quantity}</span>
-                            <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, 1)}>
+                            <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, item.period, 1)}>
                               <Icon name="Plus" size={14} />
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={() => removeFromCart(item.id)}>
+                            <Button size="sm" variant="ghost" onClick={() => removeFromCart(item.id, item.period)}>
                               <Icon name="Trash2" size={14} className="text-destructive" />
                             </Button>
                           </div>
@@ -288,27 +372,86 @@ export default function Index() {
             <p className="text-muted-foreground">Прокачай свой игровой опыт</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {shopItems.map((item) => (
-              <Card key={item.id} className="p-6 text-center hover-scale cursor-pointer bg-card border-border hover:border-primary/50 transition-all group">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center glow-purple group-hover:glow transition-all">
-                  <Icon name={item.icon as any} size={28} className="text-white" />
-                </div>
-                <h4 className="text-lg font-semibold mb-2">{item.name}</h4>
-                <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
-                <p className="text-2xl font-bold text-primary mb-4">{item.price}₽</p>
-                <Button 
-                  className="w-full bg-primary hover:bg-primary/90"
-                  onClick={() => {
-                    addToCart(item);
-                    setIsCartOpen(true);
-                  }}
-                >
-                  <Icon name="ShoppingCart" size={16} className="mr-2" />
-                  В корзину
-                </Button>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {shopItems.map((item) => {
+              const selectedPeriod = selectedPeriods[item.id] || ('week' in item.prices ? 'week' : 'once');
+              const currentPrice = (item.prices as any)[selectedPeriod];
+              
+              return (
+                <Card key={item.id} className="p-6 hover-scale bg-card border-border hover:border-primary/50 transition-all group">
+                  <div className={`w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center glow-purple group-hover:glow transition-all`}>
+                    <Icon name={item.icon as any} size={28} className="text-white" />
+                  </div>
+                  <h4 className="text-xl font-bold mb-2 text-center">{item.name}</h4>
+                  <p className="text-sm text-muted-foreground mb-4 text-center min-h-[40px]">{item.desc}</p>
+                  
+                  <div className="space-y-2 mb-4">
+                    {item.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs">
+                        <Icon name="Check" size={14} className="text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-muted-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {'week' in item.prices ? (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-3 gap-2">
+                        <Button 
+                          size="sm" 
+                          variant={selectedPeriod === 'week' ? 'default' : 'outline'}
+                          onClick={() => setSelectedPeriods(prev => ({ ...prev, [item.id]: 'week' }))}
+                          className="text-xs"
+                        >
+                          Неделя
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={selectedPeriod === 'month' ? 'default' : 'outline'}
+                          onClick={() => setSelectedPeriods(prev => ({ ...prev, [item.id]: 'month' }))}
+                          className="text-xs"
+                        >
+                          Месяц
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={selectedPeriod === 'forever' ? 'default' : 'outline'}
+                          onClick={() => setSelectedPeriods(prev => ({ ...prev, [item.id]: 'forever' }))}
+                          className="text-xs"
+                        >
+                          Навсегда
+                        </Button>
+                      </div>
+                      <p className="text-2xl font-bold text-primary text-center">{currentPrice}₽</p>
+                      <Button 
+                        className="w-full bg-primary hover:bg-primary/90"
+                        onClick={() => {
+                          addToCart(item, selectedPeriod);
+                          setIsCartOpen(true);
+                        }}
+                      >
+                        <Icon name="ShoppingCart" size={16} className="mr-2" />
+                        В корзину
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-2xl font-bold text-primary mb-4 text-center">{currentPrice}₽</p>
+                      <Button 
+                        className="w-full bg-primary hover:bg-primary/90"
+                        onClick={() => {
+                          addToCart(item, 'once');
+                          setIsCartOpen(true);
+                        }}
+                      >
+                        <Icon name="ShoppingCart" size={16} className="mr-2" />
+                        В корзину
+                      </Button>
+                    </>
+                  )}
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
