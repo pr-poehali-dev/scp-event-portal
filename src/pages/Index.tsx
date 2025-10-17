@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 
 type CartItem = {
@@ -137,6 +138,12 @@ export default function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedPeriods, setSelectedPeriods] = useState<Record<number, 'week' | 'month' | 'forever' | 'once'>>({});
+  const [showServerIP, setShowServerIP] = useState(false);
+  const serverIP = '83.143.112.140:7778';
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(serverIP);
+  };
 
   const addToCart = (item: typeof shopItems[0], period?: 'week' | 'month' | 'forever' | 'once') => {
     const priceKey = period || 'once';
@@ -188,6 +195,28 @@ export default function Index() {
               <Icon name="Users" size={18} className="mr-2" />
               Сервер
             </Button>
+            <Dialog open={showServerIP} onOpenChange={setShowServerIP}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl">IP Сервера</DialogTitle>
+                  <DialogDescription>
+                    Скопируйте адрес сервера и подключайтесь!
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                  <div className="grid flex-1 gap-2">
+                    <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                      <code className="text-lg font-mono font-bold text-primary">{serverIP}</code>
+                      <Button size="sm" onClick={copyToClipboard} className="ml-2">
+                        <Icon name="Copy" size={16} className="mr-2" />
+                        Копировать
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" className="hover-scale relative">
@@ -246,7 +275,7 @@ export default function Index() {
                 </div>
               </SheetContent>
             </Sheet>
-            <Button className="bg-primary hover:bg-primary/90 hover-scale glow">
+            <Button className="bg-primary hover:bg-primary/90 hover-scale glow" onClick={() => setShowServerIP(true)}>
               <Icon name="Play" size={18} className="mr-2" />
               Играть
             </Button>
@@ -271,7 +300,7 @@ export default function Index() {
               Эпичные игровые события, уникальные ивенты и незабываемые приключения в мире SCP
             </p>
             <div className="flex gap-4 justify-center pt-4">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 hover-scale glow">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 hover-scale glow" onClick={() => setShowServerIP(true)}>
                 <Icon name="Gamepad2" size={20} className="mr-2" />
                 Начать играть
               </Button>
