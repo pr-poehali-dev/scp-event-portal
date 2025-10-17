@@ -275,9 +275,11 @@ export default function Index() {
                 <Icon name="Gamepad2" size={20} className="mr-2" />
                 Начать играть
               </Button>
-              <Button size="lg" variant="outline" className="hover-scale">
-                <Icon name="MessageCircle" size={20} className="mr-2" />
-                Discord
+              <Button size="lg" variant="outline" className="hover-scale" asChild>
+                <a href="https://discord.gg/23enR9uqdD" target="_blank" rel="noopener noreferrer">
+                  <Icon name="MessageCircle" size={20} className="mr-2" />
+                  Discord
+                </a>
               </Button>
             </div>
           </div>
@@ -465,9 +467,11 @@ export default function Index() {
               <span className="text-sm text-muted-foreground">© 2024 FairEx Project</span>
             </div>
             <div className="flex gap-4">
-              <Button variant="ghost" size="sm">
-                <Icon name="MessageCircle" size={18} className="mr-2" />
-                Discord
+              <Button variant="ghost" size="sm" asChild>
+                <a href="https://discord.gg/23enR9uqdD" target="_blank" rel="noopener noreferrer">
+                  <Icon name="MessageCircle" size={18} className="mr-2" />
+                  Discord
+                </a>
               </Button>
               <Button variant="ghost" size="sm">
                 <Icon name="Youtube" size={18} className="mr-2" />
