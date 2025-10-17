@@ -286,7 +286,74 @@ export default function Index() {
         </div>
       </section>
 
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h3 className="text-4xl font-bold mb-3">Уникальные Плагины</h3>
+            <p className="text-muted-foreground">Технологии, которых нет больше нигде</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <Card className="p-6 hover-scale bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">
+              <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-4">
+                <Icon name="Box" size={24} className="text-primary" />
+              </div>
+              <h4 className="text-xl font-bold mb-2">MapX</h4>
+              <p className="text-muted-foreground">Уникальный плагин для строительства, который даёт миллионы возможностей которых нет ни у кого!</p>
+            </Card>
+
+            <Card className="p-6 hover-scale bg-gradient-to-br from-secondary/5 to-accent/5 border-secondary/20">
+              <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center mb-4">
+                <Icon name="Coins" size={24} className="text-secondary" />
+              </div>
+              <h4 className="text-xl font-bold mb-2">Eco System</h4>
+              <p className="text-muted-foreground">Уникальный плагин который добавляет Кейсы, экономику, кастомные смерти и другие плюшки которые получает как игроки так и администрация.</p>
+            </Card>
+
+            <Card className="p-6 hover-scale bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20">
+              <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center mb-4">
+                <Icon name="Hand" size={24} className="text-accent" />
+              </div>
+              <h4 className="text-xl font-bold mb-2">Custom Intractions</h4>
+              <p className="text-muted-foreground">Дополнение к MapX, даёт возможность использовать двери, кнопки, лестницы по которым можно лазить, разбивать стёкла, поднимать кастомные схематики в руки и всё построенное билдерами!</p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h3 className="text-4xl font-bold mb-3">Наши Карты</h3>
+            <p className="text-muted-foreground">Уникальные локации для незабываемых приключений</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <Card className="p-6 text-center hover-scale cursor-pointer group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Icon name="Building2" size={28} className="text-white" />
+              </div>
+              <h4 className="text-xl font-bold group-hover:text-primary transition-colors">Город</h4>
+            </Card>
+
+            <Card className="p-6 text-center hover-scale cursor-pointer group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Icon name="Shield" size={28} className="text-white" />
+              </div>
+              <h4 className="text-xl font-bold group-hover:text-secondary transition-colors">Бункер</h4>
+            </Card>
+
+            <Card className="p-6 text-center hover-scale cursor-pointer group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Icon name="Sun" size={28} className="text-white" />
+              </div>
+              <h4 className="text-xl font-bold group-hover:text-accent transition-colors">Обычный день</h4>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h3 className="text-4xl font-bold mb-3">Игровые Ивенты</h3>
