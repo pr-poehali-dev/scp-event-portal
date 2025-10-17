@@ -3,33 +3,89 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
 
+type CartItem = {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 const nonRpEvents = [
-  'Миссия "Ба-бах"', 'Битва титанов', 'Волны SCP', 'Голодные игры',
-  'Дуэли', 'Джаггернаут', 'Куб', 'Мафия', 
-  'Обычный раунд с дополнениями', 'Ограбление банка', 'Предатели', 'Тюрьма'
+  { name: 'Миссия "Ба-бах"', desc: 'Взрывное задание с таймером — успей обезвредить или всё полетит к чертям' },
+  { name: 'Битва титанов', desc: 'Эпичные сражения сильнейших игроков за звание чемпиона' },
+  { name: 'Волны SCP', desc: 'Бесконечные волны аномалий — выживи как можно дольше' },
+  { name: 'Голодные игры', desc: 'Последний выживший получает всё — сражайся до конца' },
+  { name: 'Дуэли', desc: 'Один на один — докажи своё превосходство в честном бою' },
+  { name: 'Джаггернаут', desc: 'Один против всех — стань неудержимой машиной смерти' },
+  { name: 'Куб', desc: 'Смертельный лабиринт с ловушками и загадками' },
+  { name: 'Мафия', desc: 'Классическая игра в мафию с элементами SCP' },
+  { name: 'Обычный раунд с дополнениями', desc: 'Знакомый режим с неожиданными поворотами' },
+  { name: 'Ограбление банка', desc: 'Налёт на защищённый объект — грабь или защищай' },
+  { name: 'Предатели', desc: 'Кто-то из вашей команды — предатель, найди его' },
+  { name: 'Тюрьма', desc: 'Побег из охраняемой зоны или охота на беглецов' }
 ];
 
 const rpEvents = [
-  'Бункер', 'Город', 'Ледяной город', 'Суд',
-  'S.T.A.L.K.E.R.', 'Метро2033', 'Fallout'
+  { name: 'Бункер', desc: 'Выживание в подземном убежище после катастрофы' },
+  { name: 'Город', desc: 'Ролевая игра в постапокалиптическом городе' },
+  { name: 'Ледяной город', desc: 'Суровое выживание в заснеженных руинах' },
+  { name: 'Суд', desc: 'Судебные разбирательства и вынесение приговоров' },
+  { name: 'S.T.A.L.K.E.R.', desc: 'Исследование Зоны, артефакты и аномалии' },
+  { name: 'Метро2033', desc: 'Жизнь в тоннелях метро после ядерной войны' },
+  { name: 'Fallout', desc: 'Постапокалипсис в духе легендарной серии' }
 ];
 
 const loreEvents = [
-  'Операция Удар Молота', 'Завод 45', 'Законсервированная зона',
-  'Заложники', 'Инцидент с SCP-008', 'Обычный день', 'Что это за место?'
+  { name: 'Операция Удар Молота', desc: 'Масштабная операция Фонда по зачистке объекта' },
+  { name: 'Завод 45', desc: 'Расследование инцидента на засекреченном заводе' },
+  { name: 'Законсервированная зона', desc: 'Проникновение в запечатанную аномальную зону' },
+  { name: 'Заложники', desc: 'Спасательная операция по освобождению персонала' },
+  { name: 'Инцидент с SCP-008', desc: 'Прорыв заражения — остановите эпидемию' },
+  { name: 'Обычный день', desc: 'Рутина Фонда, которая идёт не по плану' },
+  { name: 'Что это за место?', desc: 'Исследование неизвестной аномальной локации' }
 ];
 
 const shopItems = [
-  { id: 1, name: 'VIP Статус', price: '299₽', icon: 'Crown' },
-  { id: 2, name: 'Донат Набор', price: '499₽', icon: 'Package' },
-  { id: 3, name: 'Премиум Скин', price: '199₽', icon: 'Sparkles' },
-  { id: 4, name: 'Особая Роль', price: '399₽', icon: 'Shield' },
+  { id: 1, name: 'VIP Статус', price: 299, icon: 'Crown', desc: 'Эксклюзивные привилегии' },
+  { id: 2, name: 'Донат Набор', price: 499, icon: 'Package', desc: 'Полный комплект бонусов' },
+  { id: 3, name: 'Премиум Скин', price: 199, icon: 'Sparkles', desc: 'Уникальный внешний вид' },
+  { id: 4, name: 'Особая Роль', price: 399, icon: 'Shield', desc: 'Доступ к спец. классам' },
 ];
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState('nonrp');
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const addToCart = (item: typeof shopItems[0]) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.id === item.id);
+      if (existing) {
+        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { id: item.id, name: item.name, price: item.price, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart(prev => prev.filter(i => i.id !== id));
+  };
+
+  const updateQuantity = (id: number, delta: number) => {
+    setCart(prev => prev.map(i => {
+      if (i.id === id) {
+        const newQty = i.quantity + delta;
+        return newQty > 0 ? { ...i, quantity: newQty } : i;
+      }
+      return i;
+    }).filter(i => i.quantity > 0));
+  };
+
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,6 +105,64 @@ export default function Index() {
               <Icon name="Users" size={18} className="mr-2" />
               Сервер
             </Button>
+            <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="hover-scale relative">
+                  <Icon name="ShoppingCart" size={18} />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Корзина</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 space-y-4">
+                  {cart.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <Icon name="ShoppingBag" size={48} className="mx-auto mb-3 opacity-50" />
+                      <p>Корзина пуста</p>
+                    </div>
+                  ) : (
+                    <>
+                      {cart.map(item => (
+                        <div key={item.id} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                          <div className="flex-1">
+                            <h4 className="font-semibold">{item.name}</h4>
+                            <p className="text-sm text-primary">{item.price}₽</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, -1)}>
+                              <Icon name="Minus" size={14} />
+                            </Button>
+                            <span className="w-8 text-center">{item.quantity}</span>
+                            <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, 1)}>
+                              <Icon name="Plus" size={14} />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => removeFromCart(item.id)}>
+                              <Icon name="Trash2" size={14} className="text-destructive" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="border-t pt-4 mt-4">
+                        <div className="flex justify-between text-lg font-bold mb-4">
+                          <span>Итого:</span>
+                          <span className="text-primary">{totalPrice}₽</span>
+                        </div>
+                        <Button className="w-full bg-primary hover:bg-primary/90" size="lg">
+                          <Icon name="CreditCard" size={18} className="mr-2" />
+                          Оформить заказ
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
             <Button className="bg-primary hover:bg-primary/90 hover-scale glow">
               <Icon name="Play" size={18} className="mr-2" />
               Играть
@@ -119,8 +233,8 @@ export default function Index() {
                         <Icon name="Zap" size={20} className="text-primary" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1 group-hover:text-primary transition-colors">{event}</h4>
-                        <p className="text-sm text-muted-foreground">Экшн и динамика</p>
+                        <h4 className="font-semibold mb-1 group-hover:text-primary transition-colors">{event.name}</h4>
+                        <p className="text-sm text-muted-foreground">{event.desc}</p>
                       </div>
                     </div>
                   </Card>
@@ -137,8 +251,8 @@ export default function Index() {
                         <Icon name="Drama" size={20} className="text-secondary" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1 group-hover:text-secondary transition-colors">{event}</h4>
-                        <p className="text-sm text-muted-foreground">Ролевая игра</p>
+                        <h4 className="font-semibold mb-1 group-hover:text-secondary transition-colors">{event.name}</h4>
+                        <p className="text-sm text-muted-foreground">{event.desc}</p>
                       </div>
                     </div>
                   </Card>
@@ -155,8 +269,8 @@ export default function Index() {
                         <Icon name="Scroll" size={20} className="text-accent" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1 group-hover:text-accent transition-colors">{event}</h4>
-                        <p className="text-sm text-muted-foreground">Сюжетные миссии</p>
+                        <h4 className="font-semibold mb-1 group-hover:text-accent transition-colors">{event.name}</h4>
+                        <p className="text-sm text-muted-foreground">{event.desc}</p>
                       </div>
                     </div>
                   </Card>
@@ -181,9 +295,17 @@ export default function Index() {
                   <Icon name={item.icon as any} size={28} className="text-white" />
                 </div>
                 <h4 className="text-lg font-semibold mb-2">{item.name}</h4>
-                <p className="text-2xl font-bold text-primary mb-4">{item.price}</p>
-                <Button className="w-full bg-primary hover:bg-primary/90">
-                  Купить
+                <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
+                <p className="text-2xl font-bold text-primary mb-4">{item.price}₽</p>
+                <Button 
+                  className="w-full bg-primary hover:bg-primary/90"
+                  onClick={() => {
+                    addToCart(item);
+                    setIsCartOpen(true);
+                  }}
+                >
+                  <Icon name="ShoppingCart" size={16} className="mr-2" />
+                  В корзину
                 </Button>
               </Card>
             ))}
