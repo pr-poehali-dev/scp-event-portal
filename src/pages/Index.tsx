@@ -328,26 +328,29 @@ export default function Index() {
             <p className="text-muted-foreground">Уникальные локации для незабываемых приключений</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card className="p-6 text-center hover-scale cursor-pointer group">
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <Card className="p-6 hover-scale cursor-pointer group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Icon name="Building2" size={28} className="text-white" />
               </div>
-              <h4 className="text-xl font-bold group-hover:text-primary transition-colors">Город</h4>
+              <h4 className="text-xl font-bold mb-3 text-center group-hover:text-primary transition-colors">Город</h4>
+              <p className="text-sm text-muted-foreground">Детализированная городская локация с многоэтажными зданиями и улицами. Идеальна для RP-сценариев с выходами аномалий в городскую среду и масштабных эвакуаций.</p>
             </Card>
 
-            <Card className="p-6 text-center hover-scale cursor-pointer group">
+            <Card className="p-6 hover-scale cursor-pointer group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Icon name="Shield" size={28} className="text-white" />
+                <Icon name="Skull" size={28} className="text-white" />
               </div>
-              <h4 className="text-xl font-bold group-hover:text-secondary transition-colors">Бункер</h4>
+              <h4 className="text-xl font-bold mb-3 text-center group-hover:text-secondary transition-colors">Бункер</h4>
+              <p className="text-sm text-muted-foreground">Жизнь после апокалипсиса. Выживание в суровых условиях постъядерного мира, где каждое решение может стать последним.</p>
             </Card>
 
-            <Card className="p-6 text-center hover-scale cursor-pointer group">
+            <Card className="p-6 hover-scale cursor-pointer group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Icon name="Sun" size={28} className="text-white" />
               </div>
-              <h4 className="text-xl font-bold group-hover:text-accent transition-colors">Обычный день</h4>
+              <h4 className="text-xl font-bold mb-3 text-center group-hover:text-accent transition-colors">Обычный день</h4>
+              <p className="text-sm text-muted-foreground">Мирная повседневная локация - пригород или жилой район. Спокойные RP-сценарии или контраст перед аномальными событиями.</p>
             </Card>
           </div>
         </div>
